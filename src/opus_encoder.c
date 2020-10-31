@@ -2286,33 +2286,33 @@ opus_int32 opus_encode_get_probs(OpusEncoder *st, const opus_val16 *pcm, int fra
                 const void *analysis_pcm, opus_int32 analysis_size, int c1, int c2,
                 int analysis_channels, downmix_func downmix, int float_api)
 {
-    void *silk_enc;
+   //  void *silk_enc;
     CELTEncoder *celt_enc;
-    int i;
-    int ret=0;
-    opus_int32 nBytes;
-    ec_enc enc;
-    int bytes_target;
-    int prefill=0;
-    int start_band = 0;
-    int redundancy = 0;
-    int redundancy_bytes = 0; /* Number of bytes to use for redundancy frame */
-    int celt_to_silk = 0;
+   //  int i;
+   //  int ret=0;
+   //  opus_int32 nBytes;
+   //  ec_enc enc;
+   //  int bytes_target;
+   //  int prefill=0;
+   //  int start_band = 0;
+   //  int redundancy = 0;
+   //  int redundancy_bytes = 0; /* Number of bytes to use for redundancy frame */
+   //  int celt_to_silk = 0;
     VARDECL(opus_val16, pcm_buf);
-    int nb_compr_bytes;
-    int to_celt = 0;
-    opus_uint32 redundant_rng = 0;
-    int cutoff_Hz, hp_freq_smth1;
-    int voice_est; /* Probability of voice in Q7 */
-    opus_int32 equiv_rate;
-    int delay_compensation;
-    int frame_rate;
-    opus_int32 max_rate; /* Max bitrate we're allowed to use */
-    int curr_bandwidth;
-    opus_val16 HB_gain;
+   //  int nb_compr_bytes;
+   //  int to_celt = 0;
+   //  opus_uint32 redundant_rng = 0;
+   //  int cutoff_Hz, hp_freq_smth1;
+   //  int voice_est; /* Probability of voice in Q7 */
+   //  opus_int32 equiv_rate;
+   //  int delay_compensation;
+   //  int frame_rate;
+   //  opus_int32 max_rate; /* Max bitrate we're allowed to use */
+   //  int curr_bandwidth;
+   //  opus_val16 HB_gain;
     opus_int32 max_data_bytes; /* Max number of bytes we're allowed to use */
-    int total_buffer;
-    opus_val16 stereo_width;
+   //  int total_buffer;
+   //  opus_val16 stereo_width;
     const CELTMode *celt_mode;
 #ifndef DISABLE_FLOAT_API
     AnalysisInfo analysis_info;
@@ -2342,12 +2342,12 @@ opus_int32 opus_encode_get_probs(OpusEncoder *st, const opus_val16 *pcm, int fra
       return OPUS_BUFFER_TOO_SMALL;
     }
 
-    silk_enc = (char*)st+st->silk_enc_offset;
+   //  silk_enc = (char*)st+st->silk_enc_offset;
     celt_enc = (CELTEncoder*)((char*)st+st->celt_enc_offset);
-    if (st->application == OPUS_APPLICATION_RESTRICTED_LOWDELAY)
-       delay_compensation = 0;
-    else
-       delay_compensation = st->delay_compensation;
+   //  if (st->application == OPUS_APPLICATION_RESTRICTED_LOWDELAY)
+   //     delay_compensation = 0;
+   //  else
+   //     delay_compensation = st->delay_compensation;
 
     lsb_depth = IMIN(lsb_depth, st->lsb_depth);
 
@@ -2407,29 +2407,6 @@ opus_int32 opus_encode_get_probs(OpusEncoder *st, const opus_val16 *pcm, int fra
     st->detected_bandwidth = 0;
     if (analysis_info.valid)
     {
-   //    // to set comma as separator in float print
-   //    char *oldLocale = setlocale(LC_NUMERIC, NULL);
-
-   //    // inherit locale from environment
-   //    setlocale(LC_NUMERIC, "");
-   //    const char* fmt = "%f;";
-   //    printf(fmt, analysis_info.music_prob);
-   //    // printf(fmt, is_silence);
-   //    // printf(fmt, analysis_info.tonality);
-   //    // printf(fmt, analysis_info.tonality_slope);
-   //    // printf(fmt, analysis_info.noisiness);
-   //    // printf(fmt, analysis_info.activity);
-   //    // printf(fmt, analysis_info.music_prob);
-   //    // printf(fmt, analysis_info.music_prob_min);
-   //    // printf(fmt, analysis_info.music_prob_max);
-   //    // printf(fmt, analysis_info.bandwidth);
-   //    // printf(fmt, analysis_info.activity_probability);
-   //    // printf(fmt, analysis_info.max_pitch_ratio);
-   //    printf("\n");
-
-   //  // set the locale back
-   //  setlocale(LC_NUMERIC, oldLocale);
-
       return (opus_int32)(analysis_info.music_prob*INT32_MAX);
     }
     else
@@ -2441,8 +2418,7 @@ opus_int32 opus_encode_get_probs(OpusEncoder *st, const opus_val16 *pcm, int fra
     st->voice_ratio = -1;
 #endif
 
-   //  return 0;
-   
+   return -1;
 }
 
 
