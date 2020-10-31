@@ -2256,7 +2256,7 @@ opus_int32 opus_encode_float(OpusEncoder *st, const float *pcm, int analysis_fra
 
 
 opus_int32 opus_get_probs(OpusEncoder *st, const opus_int16 *pcm, int analysis_frame_size,
-      unsigned char *data, opus_int32 max_data_bytes)
+      opus_int32 max_data_bytes)
 {
    int i, ret;
    int frame_size;
@@ -2273,8 +2273,8 @@ opus_int32 opus_get_probs(OpusEncoder *st, const opus_int16 *pcm, int analysis_f
 
    for (i=0;i<frame_size*st->channels;i++)
       in[i] = (1.0f/32768)*pcm[i];
-   ret = opus_encode_get_probs(st, in, frame_size, data, max_data_bytes, 16,
-                            pcm, analysis_frame_size, 0, -2, st->channels, downmix_int, 0);
+   ret = opus_encode_get_probs(st, in, frame_size, max_data_bytes, 16,
+                            pcm, analysis_frame_size, 0, -2, st->channels, downmix_int);
    RESTORE_STACK;
    return ret;
 }
@@ -2282,42 +2282,16 @@ opus_int32 opus_get_probs(OpusEncoder *st, const opus_int16 *pcm, int analysis_f
 
 
 opus_int32 opus_encode_get_probs(OpusEncoder *st, const opus_val16 *pcm, int frame_size,
-                unsigned char *data, opus_int32 out_data_bytes, int lsb_depth,
+                opus_int32 out_data_bytes, int lsb_depth,
                 const void *analysis_pcm, opus_int32 analysis_size, int c1, int c2,
-                int analysis_channels, downmix_func downmix, int float_api)
+                int analysis_channels, downmix_func downmix)
 {
-   //  void *silk_enc;
     CELTEncoder *celt_enc;
-   //  int i;
-   //  int ret=0;
-   //  opus_int32 nBytes;
-   //  ec_enc enc;
-   //  int bytes_target;
-   //  int prefill=0;
-   //  int start_band = 0;
-   //  int redundancy = 0;
-   //  int redundancy_bytes = 0; /* Number of bytes to use for redundancy frame */
-   //  int celt_to_silk = 0;
     VARDECL(opus_val16, pcm_buf);
-   //  int nb_compr_bytes;
-   //  int to_celt = 0;
-   //  opus_uint32 redundant_rng = 0;
-   //  int cutoff_Hz, hp_freq_smth1;
-   //  int voice_est; /* Probability of voice in Q7 */
-   //  opus_int32 equiv_rate;
-   //  int delay_compensation;
-   //  int frame_rate;
-   //  opus_int32 max_rate; /* Max bitrate we're allowed to use */
-   //  int curr_bandwidth;
-   //  opus_val16 HB_gain;
     opus_int32 max_data_bytes; /* Max number of bytes we're allowed to use */
-   //  int total_buffer;
-   //  opus_val16 stereo_width;
     const CELTMode *celt_mode;
 #ifndef DISABLE_FLOAT_API
     AnalysisInfo analysis_info;
-   //  int analysis_read_pos_bak=-1;
-   //  int analysis_read_subframe_bak=-1;
     int is_silence = 0;
 #endif
     opus_int activity = VAD_NO_DECISION;
@@ -2342,12 +2316,7 @@ opus_int32 opus_encode_get_probs(OpusEncoder *st, const opus_val16 *pcm, int fra
       return OPUS_BUFFER_TOO_SMALL;
     }
 
-   //  silk_enc = (char*)st+st->silk_enc_offset;
     celt_enc = (CELTEncoder*)((char*)st+st->celt_enc_offset);
-   //  if (st->application == OPUS_APPLICATION_RESTRICTED_LOWDELAY)
-   //     delay_compensation = 0;
-   //  else
-   //     delay_compensation = st->delay_compensation;
 
     lsb_depth = IMIN(lsb_depth, st->lsb_depth);
 
@@ -2361,8 +2330,7 @@ opus_int32 opus_encode_get_probs(OpusEncoder *st, const opus_val16 *pcm, int fra
 #endif
     {
        is_silence = is_digital_silence(pcm, frame_size, st->channels, lsb_depth);
-      //  analysis_read_pos_bak = st->analysis.read_pos;
-      //  analysis_read_subframe_bak = st->analysis.read_subframe;
+
        run_analysis(&st->analysis, celt_mode, analysis_pcm, analysis_size, frame_size,
              c1, c2, analysis_channels, st->Fs,
              lsb_depth, downmix, &analysis_info);

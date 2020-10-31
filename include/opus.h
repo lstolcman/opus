@@ -272,9 +272,8 @@ OPUS_EXPORT OPUS_WARN_UNUSED_RESULT opus_int32 opus_get_probs(
     OpusEncoder *st,
     const opus_int16 *pcm,
     int frame_size,
-    unsigned char *data,
     opus_int32 max_data_bytes
-) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(2) OPUS_ARG_NONNULL(4);
+) OPUS_ARG_NONNULL(1) OPUS_ARG_NONNULL(2);
 
 /** Encodes an Opus frame from floating point input.
   * @param [in] st <tt>OpusEncoder*</tt>: Encoder state
